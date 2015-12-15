@@ -71,7 +71,8 @@ public final class AlarmInstance implements ClockContract.InstancesColumns {
             VIBRATE,
             RINGTONE,
             ALARM_ID,
-            ALARM_STATE
+            ALARM_STATE,
+            INCREASING_VOLUME,
     };
 
     /**
@@ -89,8 +90,9 @@ public final class AlarmInstance implements ClockContract.InstancesColumns {
     private static final int RINGTONE_INDEX = 8;
     private static final int ALARM_ID_INDEX = 9;
     private static final int ALARM_STATE_INDEX = 10;
+    private static final int INCREASING_VOLUME_INDEX = 11;
 
-    private static final int COLUMN_COUNT = ALARM_STATE_INDEX + 1;
+    private static final int COLUMN_COUNT = INCREASING_VOLUME_INDEX + 1;
 
     public static ContentValues createContentValues(AlarmInstance instance) {
         ContentValues values = new ContentValues(COLUMN_COUNT);
@@ -114,6 +116,7 @@ public final class AlarmInstance implements ClockContract.InstancesColumns {
         }
         values.put(ALARM_ID, instance.mAlarmId);
         values.put(ALARM_STATE, instance.mAlarmState);
+        values.put(INCREASING_VOLUME, instance.mIncreasingVolume ? 1 : 0);
         return values;
     }
 
@@ -333,6 +336,7 @@ public final class AlarmInstance implements ClockContract.InstancesColumns {
     public Uri mRingtone;
     public Long mAlarmId;
     public int mAlarmState;
+    public boolean mIncreasingVolume;
 
     public AlarmInstance(Calendar calendar, Long alarmId) {
         this(calendar);
@@ -346,6 +350,7 @@ public final class AlarmInstance implements ClockContract.InstancesColumns {
         mVibrate = false;
         mRingtone = null;
         mAlarmState = SILENT_STATE;
+        mIncreasingVolume = false;
     }
 
     public AlarmInstance(Cursor c) {
@@ -369,6 +374,7 @@ public final class AlarmInstance implements ClockContract.InstancesColumns {
             mAlarmId = c.getLong(ALARM_ID_INDEX);
         }
         mAlarmState = c.getInt(ALARM_STATE_INDEX);
+        mIncreasingVolume = c.getInt(INCREASING_VOLUME_INDEX) == 1;
     }
 
     public String getLabelOrDefault(Context context) {
@@ -480,6 +486,7 @@ public final class AlarmInstance implements ClockContract.InstancesColumns {
                 ", mRingtone=" + mRingtone +
                 ", mAlarmId=" + mAlarmId +
                 ", mAlarmState=" + mAlarmState +
+                ", mIncreasingVolume=" + mIncreasingVolume +
                 '}';
     }
 }
